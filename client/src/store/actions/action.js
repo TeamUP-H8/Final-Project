@@ -1,11 +1,12 @@
 import axios from "axios";
+
 const URL = "http://localhost:3000";
 
 export function setGames(payload) {
-	return {
-		type: "games/setGames",
-		payload,
-	};
+  return {
+    type: "games/setGames",
+    payload,
+  };
 }
 
 export function setPosts(payload) {
@@ -16,10 +17,10 @@ export function setPosts(payload) {
 }
 
 export function setUsers(payload) {
-	return {
-		type: "users/setUsers",
-		payload,
-	};
+  return {
+    type: "users/setUsers",
+    payload,
+  };
 }
 
 export function setOnlineUsers(payload) {
@@ -30,21 +31,21 @@ export function setOnlineUsers(payload) {
 }
 
 export function setUserDetail(payload) {
-	return {
-		type: "userDetail/setUserDetail",
-		payload,
-	};
+  return {
+    type: "userDetail/setUserDetail",
+    payload,
+  };
 }
 
 export function fetchGames() {
-	return (dispatch) => {
-		axios
-			.get(`${URL}/games`)
-			.then(({ data }) => {
-				dispatch(setGames(data));
-			})
-			.catch((err) => console.log(err));
-	};
+  return (dispatch) => {
+    axios
+      .get(`${URL}/games`)
+      .then(({ data }) => {
+        dispatch(setGames(data));
+      })
+      .catch((err) => console.log(err));
+  };
 }
 
 export function register(payload) {
@@ -60,6 +61,7 @@ export function register(payload) {
 export function login(payload) {
 	return async () => {
 		try {
+      const authKey = "a0b27f305eaed800bd7330c21a90db380a970e4e";
 			let { data } = await axios.post(`${URL}/users/login`, payload);
 			localStorage.setItem("access_token", data.access_token);
 			localStorage.setItem("id", data.id);
@@ -85,17 +87,15 @@ export function fetchPosts() {
 			console.log(err);
 		}
 	};
-}
 
 export function fetchUsers() {
-	return async (dispatch) => {
-		try {
-			let { data } = await axios.get(`${URL}/users`, {
-				headers: {
-					access_token: localStorage.getItem("access_token"),
-				},
-			});
-
+  return async (dispatch) => {
+    try {
+      let { data } = await axios.get(`${URL}/users`, {
+        headers: {
+          access_token: localStorage.getItem("access_token"),
+        },
+      });
 			dispatch(setUsers(data));
 		} catch (err) {
 			console.log(err);
@@ -127,10 +127,9 @@ export function fetchUserById(id) {
 					access_token: localStorage.getItem("access_token"),
 				},
 			});
-
-			dispatch(setUserDetail(data));
-		} catch (err) {
-			console.log(err);
-		}
-	};
+      dispatch(setUserDetail(data));
+    } catch (err) {
+      console.log(err);
+    }
+  };
 }
