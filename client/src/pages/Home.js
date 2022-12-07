@@ -2,62 +2,64 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
-	fetchPosts,
-	fetchUserById,
-	fetchOnlineUsers,
-	deletePost,
-	followFriend,
+  fetchPosts,
+  fetchUserById,
+  fetchOnlineUsers,
+  deletePost,
+  followFriend,
 } from "../store/actions/action";
 import ModalPost from "./ModalPost";
 import Swal from "sweetalert2";
 import PremiumCard from "../components/PremiumCard";
 
 export default function Home() {
-	const dispatch = useDispatch();
-	const navigation = useNavigate();
-	const id = localStorage.getItem("id");
-	const { userDetail, posts, onlineUsers } = useSelector((state) => state);
-	const [show, setShow] = useState(false);
+  const dispatch = useDispatch();
+  const navigation = useNavigate();
+  const id = localStorage.getItem("id");
+  const { userDetail, posts, onlineUsers } = useSelector((state) => state);
+  const [show, setShow] = useState(false);
 
-	const handleShow = () => setShow(true);
-	const logout = (e) => {
-		e.preventDefault();
-		localStorage.clear();
-		Swal.fire({
-			title: "Logged Out",
-			text: "Please login to find friends to play with.",
-			background: "#303030",
-			color: "#FFFFFF",
-			confirmButtonColor: "#D7385E",
-		});
-		navigation("/");
-	};
+  const handleShow = () => setShow(true);
+  const logout = (e) => {
+    e.preventDefault();
+    window.CometChatWidget.logout();
+    localStorage.clear();
+    Swal.fire({
+      title: "Logged Out",
+      text: "Please login to find friends to play with.",
+      background: "#303030",
+      color: "#FFFFFF",
+      confirmButtonColor: "#D7385E",
+    });
+    navigation("/");
+  };
 
-	useEffect(() => {
-		dispatch(fetchUserById(id));
-		dispatch(fetchOnlineUsers());
-		// eslint-disable-next-line
-	}, [onlineUsers]);
+  useEffect(() => {
+    dispatch(fetchUserById(id));
+    dispatch(fetchOnlineUsers());
+    // eslint-disable-next-line
+  }, []);
 
-	useEffect(() => {
-		dispatch(fetchPosts());
-	}, []);
+  useEffect(() => {
+    dispatch(fetchPosts());
+  }, []);
 
-	return (
-		<div className="flex xl:flex-row 2xs:flex-col-reverse 3xs:flex-col-reverse font-poppins text-[#FFFFFF] w-full min-h-screen">
-			<div className="flex xl:flex-row 2xs:flex-col-reverse 3xs:flex-col-reverse xl:gap-10 2xs:gap-5 w-screen h-content 2xs:py-5 xl:py-10 xl:px-12 2xs:px-8">
-				<div className="flex flex-col w-full mt-0 basis-8/12 gap-3">
-					{posts.length > 0 ? (
-						<div className="flex justify-end">
-							<label
-								htmlFor="modal-post"
-								className="btn bg-[#D7385E] text-slate-200">
-								Make a Post
-							</label>
+  return (
+    <div className="flex xl:flex-row 2xs:flex-col-reverse 3xs:flex-col-reverse font-poppins text-[#FFFFFF] w-full min-h-screen">
+      <div className="flex xl:flex-row 2xs:flex-col-reverse 3xs:flex-col-reverse xl:gap-10 2xs:gap-5 w-screen h-content 2xs:py-5 xl:py-10 xl:px-12 2xs:px-8">
+        <div className="flex flex-col w-full mt-0 basis-8/12 gap-3">
+          {posts.length > 0 ? (
+            <div className="flex justify-end">
+              <label
+                htmlFor="modal-post"
+                className="btn bg-[#D7385E] text-slate-200"
+              >
+                Make a Post
+              </label>
 
-							<ModalPost key={userDetail.id} />
-						</div>
-					) : null}
+              <ModalPost key={userDetail.id} />
+            </div>
+          ) : null}
 
 					{posts.length > 0 ? (
 						posts.map((post) => {
@@ -287,4 +289,5 @@ export default function Home() {
 			</div>
 		</div>
 	);
+
 }
